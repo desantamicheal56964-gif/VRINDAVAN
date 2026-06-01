@@ -497,31 +497,34 @@ const authenticateAdminToken = (req: any, res: any, next: any) => {
   next();
 };
 
-async function startServer() {
-  // Ensure database collections exist and are loaded in Firestore
-  await seedFirestoreIfNeeded();
+// Ensure database collections exist and are loaded in Firestore (non-blocking background task)
+seedFirestoreIfNeeded().catch((err) => {
+  console.error("[DATABASE] Error seeding Firestore database in background:", err);
+});
 
-  const PORT = 3000;
+// --- PUBLIC API ENDPOINTS ---
 
-  // --- PUBLIC API ENDPOINTS ---
+// Get all content for landing page (menu, content, chefs, gallery, reviews)
+app.get("/api/public/content", async (req, res) => {
+  try {
+    // Parallel loading for high-speed responsiveness
+    const [websiteContent, menu, chefs, gallery, reviews] = await Promise.all([
+      getWebsiteContent(),
+      getCollectionDocs("menu_items"),
+      getCollectionDocs("chefs"),
+      getCollectionDocs("gallery_items"),
+      getCollectionDocs("reviews")
+    ]);
 
-  // Get all content for landing page (menu, content, chefs, gallery, reviews)
-  app.get("/api/public/content", async (req, res) => {
-    try {
-      // Parallel loading for high-speed responsiveness
-      const [websiteContent, menu, chefs, gallery, reviews] = await Promise.all([
-        getWebsiteContent(),
-        getCollectionDocs("menu_items"),
-        getCollectionDocs("chefs"),
-        getCollectionDocs("gallery_items"),
-        getCollectionDocs("reviews")
-      ]);
+    // Count visitors asynchronously
+    await incrementVisitorCount();
 
-      // Count visitors asynchronously
-      await incrementVisitorCount();
-
-      // Ensure neat sorted return sets
-      reviews.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Ensure neat safe sorted return sets
+    reviews.sort((a: any, b: any) => {
+      const dateB = b?.date ? new Date(b.date).getTime() : 0;
+      const dateA = a?.date ? new Date(a.date).getTime() : 0;
+      return (isNaN(dateB) ? 0 : dateB) - (isNaN(dateA) ? 0 : dateA);
+    });
 
       res.json({
         websiteContent,
@@ -988,6 +991,9 @@ async function startServer() {
       res.status(500).json({ error: "Failed to assemble analytics metrics." });
     }
   });
+
+async function startServer() {
+  const PORT = 3000;
 
   // Vite routing setup for React App serving
   if (process.env.NODE_ENV !== "production") {
