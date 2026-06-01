@@ -11,11 +11,25 @@ import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, dele
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Read and initialize Firebase Config
-const configPath = path.join(process.cwd(), "firebase-applet-config.json");
-const firebaseConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
-const firebaseApp = initializeApp(firebaseConfig);
-const firestoreDb = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+// Read and initialize Firebase Config safely
+let firebaseApp: any = null;
+let firestoreDb: any = null;
+let useFirebase = false;
+
+try {
+  const configPath = path.join(process.cwd(), "firebase-applet-config.json");
+  if (fs.existsSync(configPath)) {
+    const firebaseConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
+    firebaseApp = initializeApp(firebaseConfig);
+    firestoreDb = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+    useFirebase = true;
+    console.log("[DATABASE] Firebase Firestore initialized successfully.");
+  } else {
+    console.warn("[DATABASE] firebase-applet-config.json not found. Falling back to local db.json store.");
+  }
+} catch (err: any) {
+  console.error("[DATABASE] Error initializing Firebase. Falling back to local db.json store:", err.message || err);
+}
 
 // Initial Seed Data definitions directly inside server to avoid bundle path issues
 const INITIAL_WEBSITE_CONTENT = {
@@ -305,14 +319,28 @@ function loadDb() {
 }
 function saveDb(data: any) {
   try {
+    if (!fs.existsSync(DB_DIR)) {
+      fs.mkdirSync(DB_DIR, { recursive: true });
+    }
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf8");
-  } catch (e) {}
+  } catch (e) {
+    console.error("[DATABASE] Error saving local db.json:", e);
+  }
 }
 
 // --- FIRESTORE PERSISTENCE LAYER ---
 
 // Generic Fetch to load an entire Firestore collection
 async function getCollectionDocs(collectionName: string) {
+  if (!useFirebase) {
+    const db = loadDb();
+    if (collectionName === "menu_items") return db.menu || [];
+    if (collectionName === "chefs") return db.chefs || [];
+    if (collectionName === "gallery_items") return db.gallery || [];
+    if (collectionName === "reviews") return db.reviews || [];
+    if (collectionName === "bookings") return db.bookings || [];
+    return [];
+  }
   try {
     const qSnap = await getDocs(collection(firestoreDb, collectionName));
     const items: any[] = [];
@@ -328,6 +356,10 @@ async function getCollectionDocs(collectionName: string) {
 
 // Checks if Firestore has metadata config; seeds standard datasets on first initialize
 async function seedFirestoreIfNeeded() {
+  if (!useFirebase) {
+    console.log("[DATABASE] Firebase not active. Skipping Firestore seeding and using local system.");
+    return;
+  }
   const configDocRef = doc(firestoreDb, "site_content", "config");
   try {
     const configSnap = await getDoc(configDocRef);
@@ -375,6 +407,10 @@ async function seedFirestoreIfNeeded() {
 }
 
 async function getWebsiteContent() {
+  if (!useFirebase) {
+    const db = loadDb();
+    return db.websiteContent || INITIAL_WEBSITE_CONTENT;
+  }
   try {
     const snap = await getDoc(doc(firestoreDb, "site_content", "config"));
     if (snap.exists()) {
@@ -389,6 +425,12 @@ async function getWebsiteContent() {
 }
 
 async function updateWebsiteContent(fields: any) {
+  if (!useFirebase) {
+    const db = loadDb();
+    db.websiteContent = { ...db.websiteContent, ...fields };
+    saveDb(db);
+    return;
+  }
   try {
     const ref = doc(firestoreDb, "site_content", "config");
     await setDoc(ref, fields, { merge: true });
@@ -398,6 +440,10 @@ async function updateWebsiteContent(fields: any) {
 }
 
 async function getVisitorCount() {
+  if (!useFirebase) {
+    const db = loadDb();
+    return db.visitorCount || 1556;
+  }
   try {
     const snap = await getDoc(doc(firestoreDb, "site_content", "config"));
     if (snap.exists()) {
@@ -410,6 +456,13 @@ async function getVisitorCount() {
 }
 
 async function incrementVisitorCount() {
+  if (!useFirebase) {
+    const db = loadDb();
+    const current = db.visitorCount || 1556;
+    db.visitorCount = current + 1;
+    saveDb(db);
+    return;
+  }
   try {
     const ref = doc(firestoreDb, "site_content", "config");
     const snap = await getDoc(ref);
@@ -537,15 +590,22 @@ async function startServer() {
     };
 
     try {
-      await setDoc(doc(firestoreDb, "bookings", bookingId), newBooking);
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.bookings) db.bookings = [];
+        db.bookings.push(newBooking);
+        saveDb(db);
+      } else {
+        await setDoc(doc(firestoreDb, "bookings", bookingId), newBooking);
+      }
       res.json({
         success: true,
         message: "Your table reservation request has been successfully submitted.",
         booking: newBooking
       });
     } catch (err) {
-      console.error("Error creating Firestore booking:", err);
-      res.status(500).json({ error: "Failed to create booking in firestore." });
+      console.error("Error creating booking:", err);
+      res.status(500).json({ error: "Failed to create booking." });
     }
   });
 
@@ -570,10 +630,17 @@ async function startServer() {
     };
 
     try {
-      await setDoc(doc(firestoreDb, "reviews", reviewId), newReview);
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.reviews) db.reviews = [];
+        db.reviews.push(newReview);
+        saveDb(db);
+      } else {
+        await setDoc(doc(firestoreDb, "reviews", reviewId), newReview);
+      }
       res.json({ success: true, review: newReview });
     } catch (err) {
-      console.error("Error saving review to Firestore:", err);
+      console.error("Error saving review to Database:", err);
       res.status(500).json({ error: "Failed to persist review." });
     }
   });
@@ -631,13 +698,23 @@ async function startServer() {
     }
 
     try {
-      const bookingRef = doc(firestoreDb, "bookings", id);
-      const bookingSnap = await getDoc(bookingRef);
-      if (!bookingSnap.exists()) {
-        return res.status(404).json({ error: "Booking reservation session not found." });
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.bookings) db.bookings = [];
+        const index = db.bookings.findIndex((b: any) => b.id === id);
+        if (index === -1) {
+          return res.status(404).json({ error: "Booking reservation session not found." });
+        }
+        db.bookings[index].status = status;
+        saveDb(db);
+      } else {
+        const bookingRef = doc(firestoreDb, "bookings", id);
+        const bookingSnap = await getDoc(bookingRef);
+        if (!bookingSnap.exists()) {
+          return res.status(404).json({ error: "Booking reservation session not found." });
+        }
+        await setDoc(bookingRef, { status }, { merge: true });
       }
-
-      await setDoc(bookingRef, { status }, { merge: true });
       const bookings = await getCollectionDocs("bookings");
       bookings.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
       res.json({ success: true, bookings });
@@ -650,13 +727,23 @@ async function startServer() {
     const { id } = req.params;
 
     try {
-      const bookingRef = doc(firestoreDb, "bookings", id);
-      const bookingSnap = await getDoc(bookingRef);
-      if (!bookingSnap.exists()) {
-        return res.status(404).json({ error: "Booking session not found to be deleted." });
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.bookings) db.bookings = [];
+        const initialLen = db.bookings.length;
+        db.bookings = db.bookings.filter((b: any) => b.id !== id);
+        if (db.bookings.length === initialLen) {
+          return res.status(404).json({ error: "Booking session not found to be deleted." });
+        }
+        saveDb(db);
+      } else {
+        const bookingRef = doc(firestoreDb, "bookings", id);
+        const bookingSnap = await getDoc(bookingRef);
+        if (!bookingSnap.exists()) {
+          return res.status(404).json({ error: "Booking session not found to be deleted." });
+        }
+        await deleteDoc(bookingRef);
       }
-
-      await deleteDoc(bookingRef);
       const bookings = await getCollectionDocs("bookings");
       bookings.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
       res.json({ success: true, bookings });
@@ -690,7 +777,14 @@ async function startServer() {
     };
 
     try {
-      await setDoc(doc(firestoreDb, "menu_items", dishId), newDish);
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.menu) db.menu = [];
+        db.menu.push(newDish);
+        saveDb(db);
+      } else {
+        await setDoc(doc(firestoreDb, "menu_items", dishId), newDish);
+      }
       const menu = await getCollectionDocs("menu_items");
       res.json({ success: true, menu });
     } catch (err) {
@@ -703,12 +797,6 @@ async function startServer() {
     const { name, description, category, price, image, available } = req.body;
 
     try {
-      const dishRef = doc(firestoreDb, "menu_items", id);
-      const dishSnap = await getDoc(dishRef);
-      if (!dishSnap.exists()) {
-        return res.status(404).json({ error: "Dish menu item not found for updates." });
-      }
-
       const updatedFields: any = {};
       if (name) updatedFields.name = name.trim();
       if (description !== undefined) updatedFields.description = description.trim();
@@ -720,7 +808,23 @@ async function startServer() {
       if (image) updatedFields.image = image;
       if (available !== undefined) updatedFields.available = !!available;
 
-      await setDoc(dishRef, updatedFields, { merge: true });
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.menu) db.menu = [];
+        const index = db.menu.findIndex((m: any) => m.id === id);
+        if (index === -1) {
+          return res.status(404).json({ error: "Dish menu item not found for updates." });
+        }
+        db.menu[index] = { ...db.menu[index], ...updatedFields };
+        saveDb(db);
+      } else {
+        const dishRef = doc(firestoreDb, "menu_items", id);
+        const dishSnap = await getDoc(dishRef);
+        if (!dishSnap.exists()) {
+          return res.status(404).json({ error: "Dish menu item not found for updates." });
+        }
+        await setDoc(dishRef, updatedFields, { merge: true });
+      }
       const menu = await getCollectionDocs("menu_items");
       res.json({ success: true, menu });
     } catch (err) {
@@ -732,13 +836,23 @@ async function startServer() {
     const { id } = req.params;
 
     try {
-      const dishRef = doc(firestoreDb, "menu_items", id);
-      const dishSnap = await getDoc(dishRef);
-      if (!dishSnap.exists()) {
-        return res.status(404).json({ error: "Dish menu item not found." });
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.menu) db.menu = [];
+        const initialLen = db.menu.length;
+        db.menu = db.menu.filter((m: any) => m.id !== id);
+        if (db.menu.length === initialLen) {
+          return res.status(404).json({ error: "Dish menu item not found." });
+        }
+        saveDb(db);
+      } else {
+        const dishRef = doc(firestoreDb, "menu_items", id);
+        const dishSnap = await getDoc(dishRef);
+        if (!dishSnap.exists()) {
+          return res.status(404).json({ error: "Dish menu item not found." });
+        }
+        await deleteDoc(dishRef);
       }
-
-      await deleteDoc(dishRef);
       const menu = await getCollectionDocs("menu_items");
       res.json({ success: true, menu });
     } catch (err) {
@@ -784,7 +898,14 @@ async function startServer() {
     };
 
     try {
-      await setDoc(doc(firestoreDb, "gallery_items", galleryId), newPhoto);
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.gallery) db.gallery = [];
+        db.gallery.push(newPhoto);
+        saveDb(db);
+      } else {
+        await setDoc(doc(firestoreDb, "gallery_items", galleryId), newPhoto);
+      }
       const gallery = await getCollectionDocs("gallery_items");
       res.json({ success: true, gallery });
     } catch (err) {
@@ -796,10 +917,21 @@ async function startServer() {
     const { id } = req.params;
 
     try {
-      const photoRef = doc(firestoreDb, "gallery_items", id);
-      const photoSnap = await getDoc(photoRef);
-      if (photoSnap.exists()) {
-        await deleteDoc(photoRef);
+      if (!useFirebase) {
+        const db = loadDb();
+        if (!db.gallery) db.gallery = [];
+        const initialLen = db.gallery.length;
+        db.gallery = db.gallery.filter((g: any) => g.id !== id);
+        if (db.gallery.length === initialLen) {
+          return res.status(404).json({ error: "Photo asset not found." });
+        }
+        saveDb(db);
+      } else {
+        const photoRef = doc(firestoreDb, "gallery_items", id);
+        const photoSnap = await getDoc(photoRef);
+        if (photoSnap.exists()) {
+          await deleteDoc(photoRef);
+        }
       }
       const gallery = await getCollectionDocs("gallery_items");
       res.json({ success: true, gallery });
