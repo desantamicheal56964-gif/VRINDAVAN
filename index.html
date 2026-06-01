@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Cleanly intercept and mock the Vite client HMR WebSocket when HMR is inactive -->
+    <script>
+      (function() {
+        if (typeof window !== 'undefined') {
+          const OriginalWebSocket = window.WebSocket;
+          if (OriginalWebSocket) {
+            class MockViteWebSocket {
+              constructor(url, protocols) {
+                this.url = url;
+                this.readyState = 3; // CLOSED stage
+                this.onclose = null;
+                this.onerror = null;
+                this.onmessage = null;
+                this.onopen = null;
+                this._listeners = {};
+                console.log("[SYSTEM] Suppressed container environment HMR WebSocket loop.");
+              }
+              addEventListener(type, callback) {
+                if (!this._listeners[type]) this._listeners[type] = [];
+                this._listeners[type].push(callback);
+              }
+              removeEventListener(type, callback) {
+                if (this._listeners[type]) {
+                  this._listeners[type] = this._listeners[type].filter(cb => cb !== callback);
+                }
+              }
+              dispatchEvent(event) {
+                return true;
+              }
+              send(data) {}
+              close() {}
+            }
+            window.WebSocket = function(url, protocols) {
+              const isViteHmr = Array.isArray(protocols) 
+                ? protocols.includes('vite-hmr') 
+                : (protocols === 'vite-hmr');
+              if (isViteHmr) {
+                return new MockViteWebSocket(url, protocols);
+              }
+              return new OriginalWebSocket(url, protocols);
+            };
+            window.WebSocket.prototype = OriginalWebSocket.prototype;
+            Object.setPrototypeOf(window.WebSocket, OriginalWebSocket);
+          }
+        }
+      })();
+    </script>
+    
+    <!-- Premium SEO Meta Keywords and Descriptions -->
+    <title>VRINDAVAN HOTEL | Peaceful Garden Restaurant in Chalisgaon, Maharashtra</title>
+    <meta name="description" content="Experience premium fine dining at VRINDAVAN HOTEL, Chalisgaon's finest garden rest area. Authentic pure veg recipes, certified hygiene standards, experienced professional chefs, and relaxed family-friendly outdoor dining." />
+    <meta name="keywords" content="Best Restaurant in Chalisgaon, Family Restaurant Chalisgaon, Garden Restaurant Chalisgaon, Hygienic Restaurant Maharashtra, VRINDAVAN HOTEL, Chalisgaon Food, Dining Chalisgaon" />
+    <meta name="author" content="Vrindavan Hotel" />
+    
+    <!-- Open Graph (OG) Social Card Tags -->
+    <meta property="og:title" content="VRINDAVAN HOTEL | Premium Garden Rest Area & Restaurant" />
+    <meta property="og:description" content="Savor delicious hygiene-certified pure veg cuisines under warm open-air garden lights at Vrindavan Hotel, Chalisgaon." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800" />
+    
+    <!-- Schema Structured Restaurant Markup (SEO Lift-up) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "VRINDAVAN HOTEL",
+        "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Hirapur Rd, near Pragati Furniture, Thakur Wadi, Indraprastha Nagar",
+          "addressLocality": "Chalisgaon",
+          "addressRegion": "Maharashtra",
+          "postalCode": "424101",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "20.452654",
+          "longitude": "75.006900"
+        },
+        "url": "https://vrindavanhotel.in",
+        "telephone": "+919422786543",
+        "priceRange": "$$",
+        "servesCuisine": "Indian, vegetarian, pure veg",
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "11:00",
+          "closes": "23:30"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

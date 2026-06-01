@@ -1,0 +1,115 @@
+{
+  "entities": {
+    "WebsiteContent": {
+      "title": "WebsiteContent",
+      "description": "Custom editable textual content for hotel landing pages",
+      "type": "object",
+      "properties": {
+        "heroTitle": { "type": "string", "description": "Lobby splash major headline text" },
+        "heroSubtitle": { "type": "string", "description": "Lobby splash introductory subtitle body text" },
+        "aboutStory": { "type": "string", "description": "Detailed historic story of our restaurant" },
+        "contactPhone": { "type": "string", "description": "Official booking contact cellular phone number" },
+        "contactAddress": { "type": "string", "description": "Physical location address of the resort" },
+        "openingHours": { "type": "string", "description": "Daily regular working hours" }
+      },
+      "required": ["heroTitle", "heroSubtitle", "aboutStory", "contactPhone", "contactAddress", "openingHours"]
+    },
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "Gastronomic menu dishes presented beautifully to guests",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique key code of the recipe item" },
+        "name": { "type": "string", "description": "Syllable name of the recipe dish" },
+        "description": { "type": "string", "description": "Detailed mouth-watering description of ingredients and tastes" },
+        "category": { "type": "string", "description": "High-level categorized listing group" },
+        "price": { "type": "number", "description": "Price unit value" },
+        "image": { "type": "string", "description": "Beautiful photography visual asset link" },
+        "available": { "type": "boolean", "description": "Whether current cooking is in stock right now" }
+      },
+      "required": ["id", "name", "description", "category", "price", "image", "available"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Secure table reservations requested by prospective diners",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "System-generated reference ticket id" },
+        "name": { "type": "string", "description": "Name designation of primary guest traveler" },
+        "mobile": { "type": "string", "description": "Cellular communication mobile phone sequence" },
+        "date": { "type": "string", "description": "Target reservation date calendar sequence" },
+        "time": { "type": "string", "description": "Desired clock slot time representing dinner or lunch session" },
+        "persons": { "type": "number", "description": "Total head count of reservation group guests" },
+        "specialRequest": { "type": "string", "description": "Custom dietary requests or seat preferences" },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected"], "description": "Active state status of ledger request" },
+        "createdAt": { "type": "string", "description": "Chronological system logging timestamp" }
+      },
+      "required": ["id", "name", "mobile", "date", "time", "persons", "status"]
+    },
+    "ChefItem": {
+      "title": "ChefItem",
+      "description": "Curated profile card of kitchen culinary masters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifiers of master chef profiles" },
+        "name": { "type": "string", "description": "Personal name sequence of chef" },
+        "role": { "type": "string", "description": "Gourmet leadership specialty tier designation" },
+        "experience": { "type": "string", "description": "Number of active years details" },
+        "image": { "type": "string", "description": "Professional avatar image url sequence" },
+        "description": { "type": "string", "description": "Detailed background biography of credentials" }
+      },
+      "required": ["id", "name", "role", "experience", "image", "description"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "Aesthetic visualization graphics in lobby picture gallery",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique picture link reference code" },
+        "url": { "type": "string", "description": "Aesthetic visual image source website url" },
+        "title": { "type": "string", "description": "Clean description title displayed on hover cards" },
+        "category": { "type": "string", "description": "Finetuned structural visual category layout" }
+      },
+      "required": ["id", "url", "title", "category"]
+    },
+    "ReviewItem": {
+      "title": "ReviewItem",
+      "description": "Genuine customer sentiment feedback and metrics review ratings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Review unique receipt token key" },
+        "name": { "type": "string", "description": "Authentic full name of user" },
+        "rating": { "type": "number", "description": "Total numerical custom 1-5 evaluation stars" },
+        "text": { "type": "string", "description": "Sincere testimonial paragraph block reviews text" },
+        "date": { "type": "string", "description": "Time logging sequence" }
+      },
+      "required": ["id", "name", "rating", "text", "date"]
+    }
+  },
+  "firestore": {
+    "site_content": {
+      "schema": "WebsiteContent",
+      "description": "Provides localized content modifications stored under document index code: config"
+    },
+    "menu_items": {
+      "schema": "MenuItem",
+      "description": "Collections of culinary dishes served at Vrindavan Resort"
+    },
+    "bookings": {
+      "schema": "Booking",
+      "description": "Secure record tracker ledger for table bookings"
+    },
+    "chefs": {
+      "schema": "ChefItem",
+      "description": "Ledger of kitchen chefs and specialists"
+    },
+    "gallery_items": {
+      "schema": "GalleryItem",
+      "description": "Elegant design gallery capture snapshots"
+    },
+    "reviews": {
+      "schema": "ReviewItem",
+      "description": "Positive gourmet feedback published online"
+    }
+  }
+}

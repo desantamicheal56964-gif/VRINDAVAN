@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Enable full read & write permissions for all collections (bookings, menus, reviews, etc.)
+    // as requested by the owner to avoid any authentication or restriction blocks whatsoever.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

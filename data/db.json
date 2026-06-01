@@ -1,0 +1,258 @@
+{
+  "websiteContent": {
+    "heroTitle": "Experience Elegant Taste & Peaceful Garden Dining",
+    "heroSubtitle": "Welcome to VRINDAVAN HOTEL, Chalisgaon's premier destination for high-quality food, pristine hygiene standards, and relaxing open-air dining.",
+    "aboutStory": "At VRINDAVAN HOTEL, we believe that dining is not just about food, but about creating memorable experiences. Established on Hirapur Rd, Thakur Wadi, we have grown to become the trust-mark of fine Indian hospitality in Chalisgaon. Under the culinary leadership of our seasoned chefs, we blend traditional Maharastrian and diverse Indian recipes with modern dining sophistication. Our open-air garden rest area provides an oasis of peace, perfect for rich family celebrations, gatherings, and calm dinners.",
+    "contactPhone": "+91 94227 86543",
+    "contactAddress": "Hirapur Rd, near Pragati Furniture, Thakur Wadi, Indraprastha Nagar, Chalisgaon, Maharashtra 424101, India",
+    "openingHours": "Monday - Sunday: 11:00 AM - 11:30 PM"
+  },
+  "menu": [
+    {
+      "id": "dish-starters-1",
+      "name": "Paneer Tikka Achari",
+      "description": "Soft cottage cheese chunks marinated in tangy pickle spices, skewered with onions and bell peppers, and roasted in our clay tandoor oven.",
+      "category": "Starters",
+      "price": 240,
+      "image": "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-starters-2",
+      "name": "Hara Bhara Kabab",
+      "description": "Crispy spinach, green pea, and potato patties seasoned with authentic spices and pan-fried with dynamic herbs.",
+      "category": "Starters",
+      "price": 180,
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-soups-1",
+      "name": "Hot & Sour Veg Soup",
+      "description": "Classic Chinese soup packed with shredded premium vegetables, ginger, garlic, and tangy spice broths.",
+      "category": "Soups",
+      "price": 115,
+      "image": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-soups-2",
+      "name": "Cream of Tomato Soup",
+      "description": "Vibrant ripe red tomatoes pureed with fresh cream, served with crispy hand-buttered croutons.",
+      "category": "Soups",
+      "price": 110,
+      "image": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-veg-1",
+      "name": "Veg Kadhai Premium",
+      "description": "A combination of daily picked fresh garden vegetables cooked in a spicy kadhai gravy with capsicum and fresh coriander.",
+      "category": "Vegetarian Dishes",
+      "price": 210,
+      "image": "https://images.unsplash.com/photo-1588644525999-f15318353b3c?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-veg-2",
+      "name": "Kaju Curry Peshawari",
+      "description": "Whole roasted cashew nuts simmered in a rich, buttery, sweet and creamy brown gravy topped with fresh cream.",
+      "category": "Vegetarian Dishes",
+      "price": 280,
+      "image": "https://images.unsplash.com/photo-1588644525999-f15318353b3c?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-paneer-1",
+      "name": "Vrindavan Special Paneer Masala",
+      "description": "Our signature preparation consisting of hand-pressed paneer cubes cooked in a spiced rich cashew-onion-tomato double-gravy.",
+      "category": "Paneer Specials",
+      "price": 270,
+      "image": "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-paneer-2",
+      "name": "Paneer Butter Masala",
+      "description": "Succulent cottage cheese cubes simmered in a luscious sweet tomato curry enriched with butter, honey, and dried fenugreek leaves.",
+      "category": "Paneer Specials",
+      "price": 250,
+      "image": "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-south-1",
+      "name": "Butter Masala Dosa",
+      "description": "Crispy fermented rice-lentil crepe smeared with fresh butter, spiced potato mash, served with rich sambar and coconut chutneys.",
+      "category": "South Indian",
+      "price": 130,
+      "image": "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-chinese-1",
+      "name": "Veg Manchurian Dry",
+      "description": "Crispy fried vegetable balls tossed in dynamic garlic, soy sauce, and spring onion seasoning.",
+      "category": "Chinese",
+      "price": 175,
+      "image": "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-chinese-2",
+      "name": "Schezwan Veg Hakka Noodles",
+      "description": "Spicy wok-tossed long wheat noodles cooked with freshly sliced bell peppers, cabbage, carrots, and house-made Schezwan paste.",
+      "category": "Chinese",
+      "price": 190,
+      "image": "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-main-1",
+      "name": "Double Tadka Yellow Dal",
+      "description": "Classic yellow lentils tempered twice with lots of aromatic garlic, cumin, mustard seeds, and pure desi ghee.",
+      "category": "Main Course",
+      "price": 160,
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-main-2",
+      "name": "Veg Kofta Mughlai",
+      "description": "Rich vegetable-paneer balls cooked in a rich, mildly spiced creamy golden gravy.",
+      "category": "Main Course",
+      "price": 220,
+      "image": "https://images.unsplash.com/photo-1588644525999-f15318353b3c?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-breads-1",
+      "name": "Garlic Butter Naan",
+      "description": "Tandoored leavened refined wheat bread seasoned with lots of minced premium garlic and brushed with fresh butter.",
+      "category": "Breads",
+      "price": 60,
+      "image": "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-breads-2",
+      "name": "Tandoori Butter Roti",
+      "description": "Whole wheat bread baked perfectly inside our traditional clay tandoor oven, finished with smooth desi butter.",
+      "category": "Breads",
+      "price": 25,
+      "image": "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-rice-1",
+      "name": "Special Dum Veg Biryani",
+      "description": "Long grain Basmati rice dum-cooked slowly with aromatic spices, fresh vegetables, mint leaves, and pure saffron water, served with dahi raita.",
+      "category": "Rice",
+      "price": 240,
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-rice-2",
+      "name": "Jeera Rice Basmati",
+      "description": "Fragrant boiled Basmati rice seasoned expertly with butter and lightly cracked cumin seeds.",
+      "category": "Rice",
+      "price": 130,
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-dessert-1",
+      "name": "Gulab Jamun with Ice Cream",
+      "description": "Two golden milk-solid dumplings soaked in sugary cardamom syrup, served warm with a scoop of premium vanilla bean ice cream.",
+      "category": "Desserts",
+      "price": 110,
+      "image": "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    },
+    {
+      "id": "dish-bev-1",
+      "name": "Royal Mango Punjabi Lassi",
+      "description": "Thick, churned yogurt sweet beverage infused with delicious Alphonso mango pulp, served ice-cold in a traditional earthen clay glass.",
+      "category": "Beverages",
+      "price": 90,
+      "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80&w=400",
+      "available": true
+    }
+  ],
+  "bookings": [],
+  "chefs": [
+    {
+      "id": "chef-1",
+      "name": "Chef Rajendra Patil",
+      "role": "Executive Head Chef",
+      "experience": "18+ Years",
+      "image": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=400",
+      "description": "Specializes in authentic Indian cuisines and North Indian Paneer delicacies with signature spice blend profiles."
+    },
+    {
+      "id": "chef-2",
+      "name": "Chef Amit Kulkarni",
+      "role": "Master Indian Bread & Tandoor Specialist",
+      "experience": "12+ Years",
+      "image": "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=400",
+      "description": "Expert in traditional tandoori artistry, perfecting hand-stretched butter naan and clay-oven roasted delicacies."
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gal-1",
+      "url": "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=600",
+      "title": "Happy Guests Sharing Elegant Feast",
+      "category": "Garden Seating"
+    },
+    {
+      "id": "gal-2",
+      "url": "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=600",
+      "title": "Vrindavan Family Dining Lounge",
+      "category": "Family Area"
+    },
+    {
+      "id": "gal-3",
+      "url": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&q=80&w=600",
+      "title": "Scenic Open-Air Wooden Deck",
+      "category": "Outdoor Dining"
+    },
+    {
+      "id": "gal-4",
+      "url": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600",
+      "title": "Ambient Evening Garden Lighting",
+      "category": "Evening Lighting"
+    },
+    {
+      "id": "gal-5",
+      "url": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&q=80&w=600",
+      "title": "Beautiful Rest & Relaxation Zone",
+      "category": "Relaxation Zone"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "name": "Sachin Marathe",
+      "rating": 5,
+      "text": "The best family dining experience in Chalisgaon! The garden seating is extremely peaceful, and the hygiene is top-notch. Highly recommend the Paneer Tikka Masala and Garlic Naan.",
+      "date": "2026-05-15"
+    },
+    {
+      "id": "rev-2",
+      "name": "Priyanka Deshmukh",
+      "rating": 5,
+      "text": "VRINDAVAN HOTEL has amazing food. The service is incredibly fast and the staff is highly trained. The open-air setup in the evening with beautiful lighting makes it look so premium.",
+      "date": "2026-05-24"
+    },
+    {
+      "id": "rev-3",
+      "name": "Rahul Sonawane",
+      "rating": 5,
+      "text": "Extremely clean, delicious vegetarian food, and excellent parking space. The chefs really know their craft. We hold all our family parties here now.",
+      "date": "2026-05-29"
+    }
+  ],
+  "visitorCount": 1554
+}

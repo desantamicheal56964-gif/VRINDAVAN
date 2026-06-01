@@ -1,0 +1,6 @@
+{
+  "name": "Vrindavan Hotel Restaurant",
+  "description": "Premium luxury website for Vrindavan Hotel in Chalisgaon, Maharashtra, featuring an elegant garden dining showcase, dynamic menu categories, secure booking engine, and administrative control center.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
